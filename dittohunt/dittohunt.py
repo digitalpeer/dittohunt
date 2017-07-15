@@ -230,7 +230,7 @@ class MainWindow(QT_QMainWindow):
         msg.setIconPixmap(pixmap)
         msg.setInformativeText("Copyright (c) 2017 Joshua Henderson")
         msg.setWindowTitle("Ditto Hunt " + __version__)
-        with codecs.open('LICENSE.txt', encoding='utf-8') as f:
+        with codecs.open(os.path.join(os.path.dirname(__file__),'LICENSE.txt'), encoding='utf-8') as f:
             msg.setDetailedText(f.read())
         msg.setText(
             "<p><b>Ditto Hunt</b> is a duplicate file finder that quickly finds"

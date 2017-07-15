@@ -1,0 +1,8 @@
+include README.md
+include LICENSE.txt
+include CHANGES.rst
+include Makefile
+include pylintrc
+include dittohunt/*.ui
+recursive-include dittohunt/res *
+recursive-include screenshots *
