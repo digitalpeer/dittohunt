@@ -119,7 +119,7 @@ elif USE_QT_PY == PYSIDE:
     QT_QAction=QtGui.QAction
     QT_QTreeWidgetItemIterator=QtGui.QTreeWidgetItemIterator
     QT_QMessageBox=QtGui.QMessageBox
-    from pyside_dynamic import *
+    from .pyside_dynamic import *
 
 elif USE_QT_PY == PYQT4:
     import sip
