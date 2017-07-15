@@ -49,7 +49,6 @@ setup(
     },
     install_requires=[],
     keywords='file find duplicate',
-    license='GPL3',
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: X11 Applications :: Qt',
                  'Natural Language :: English',
