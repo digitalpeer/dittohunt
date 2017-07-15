@@ -31,7 +31,12 @@ def find_duplicates(path, status_callback=None):
     for root, dirs, filenames in os.walk(str(path)):
         for filename in filenames:
             path = os.path.join(root, filename)
-            sizes[os.path.getsize(path)].append(path)
+            try:
+                # This can result in FileNotFoundError, for example, when there
+                # is a bad symlink.  Just ignore this specific error.
+                sizes[os.path.getsize(path)].append(path)
+            except FileNotFoundError as e:
+                pass
     sizes = [x for x in sizes.values() if len(x) > 1]
 
     # now compare hashes of equal size files
