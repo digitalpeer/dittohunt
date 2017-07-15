@@ -64,15 +64,20 @@ def add_duplicates(tree, duplist, check_children=False):
 class FindThread(QtCore.QThread):
     """ Thread to handle file searching so we don't block the main thread. """
 
-    done = QtCore.pyqtSignal(list, name='done')
+    done = QtCore.pyqtSignal(list, str, name='done')
 
     def __init__(self, path):
         super(FindThread, self).__init__()
         self.path = path
 
     def run(self):
-        dups = find_duplicates(self.path)
-        self.done.emit(dups)
+        error = None
+        dups = []
+        try:
+            dups = find_duplicates(self.path)
+        except Exception as e:
+            error = str(e)
+        self.done.emit(dups, error)
 
     def __del__(self):
         self.wait()
@@ -178,13 +183,20 @@ class MainWindow(QT_QMainWindow):
             item.setCheckState(1, QtCore.Qt.Unchecked)
             iterator += 1
 
-    def done(self, dups):
-        for dup in dups:
-            add_duplicates(self.tree, dup, self.actionAutoSelect.isChecked())
-        self.statusBar().showMessage("Found {} files with at least one"
-                                     " duplicate.".format(len(dups)))
+    def done(self, dups, error):
+        if error is not None:
+            msg = "An unhandled exception occurred trying to search files."
+            errorbox = QT_QMessageBox(self)
+            errorbox.setText(error)
+            errorbox.exec_()
+        else:
+            for dup in dups:
+                add_duplicates(self.tree, dup, self.actionAutoSelect.isChecked())
+                self.statusBar().showMessage("Found {} files with at least one"
+                                             " duplicate.".format(len(dups)))
+            self.deleteButton.setEnabled(True)
+
         self.progress_dialog.hide()
-        self.deleteButton.setEnabled(True)
 
     def onBtnDelete(self):
         msg = "Are you sure you want to permanently delete all selected files?"
@@ -243,7 +255,6 @@ class MainWindow(QT_QMainWindow):
 
         msg.setStandardButtons(QT_QMessageBox.Ok)
         msg.exec_()
-
 
 def main():
     """Create main app and window."""
