@@ -1,0 +1,5 @@
+*.pyc
+/dittohunt.egg-info
+/dist
+/build
+/dittohunt/dittohunt_rc.py
