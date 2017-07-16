@@ -22,10 +22,10 @@ def checked_files(tree):
     """ Returns a list of checked file names. """
 
     checked = list()
-    iterator = QT_QTreeWidgetItemIterator(tree)
+    iterator = QTreeWidgetItemIterator(tree)
     while iterator.value():
         item = iterator.value()
-        if item.checkState(1) == QtCore.Qt.Checked:
+        if item.checkState(1) == Qt.Checked:
             checked.append(item.text(0))
         iterator += 1
     return checked
@@ -34,7 +34,7 @@ def delete_move_file(files, movedir=None):
     """ Delete or move the specified files. """
 
     for f in files:
-        QT_QApplication.processEvents()
+        QApplication.processEvents()
         if movedir is None:
             os.remove(f)
         else:
@@ -46,7 +46,7 @@ def delete_move_file(files, movedir=None):
                 os.makedirs(os.path.dirname(target))
             shutil.move(f, target)
 
-class FindThread(QtCore.QThread):
+class FindThread(QThread):
     """ Thread to handle file searching so we don't block the main thread. """
 
     done = QtCore.pyqtSignal(list, str, name='done')
@@ -67,7 +67,7 @@ class FindThread(QtCore.QThread):
     def __del__(self):
         self.wait()
 
-class MainWindow(QT_QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         load_ui_widget(os.path.join(os.path.dirname(__file__), 'dittohunt.ui'),
@@ -83,28 +83,28 @@ class MainWindow(QT_QMainWindow):
         self.tree.header().setStretchLastSection(False)
         self.tree.headerItem().setText(0, "Path")
         if USE_QT_PY == PYQT5:
-            self.tree.header().setSectionResizeMode(0, QT_QHeaderView.Stretch)
+            self.tree.header().setSectionResizeMode(0, QHeaderView.Stretch)
         else:
-            self.tree.header().setResizeMode(0, QT_QHeaderView.Stretch)
+            self.tree.header().setResizeMode(0, QHeaderView.Stretch)
         self.tree.headerItem().setText(1, "Selected")
         self.tree.setAnimated(True)
-        self.tree.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        self.tree.setContextMenuPolicy(Qt.CustomContextMenu)
         self.tree.customContextMenuRequested.connect(self.onOpenMenu)
         self.tree.itemSelectionChanged.connect(self.onItemSelected)
 
-        self.imageLabel.setBackgroundRole(QtGui.QPalette.Base)
-        self.imageLabel.setSizePolicy(QT_QSizePolicy.Ignored,
-                                      QT_QSizePolicy.Ignored)
+        self.imageLabel.setBackgroundRole(QPalette.Base)
+        self.imageLabel.setSizePolicy(QSizePolicy.Ignored,
+                                      QSizePolicy.Ignored)
         self.imageLabel.installEventFilter(self)
         self.imageLabel.setText("PREVIEW")
         self.imageLabel.setStyleSheet('color: lightgrey')
 
         self.actionOpen.triggered.connect(self.onOpen)
-        self.actionQuit.triggered.connect(QT_QApplication.quit)
+        self.actionQuit.triggered.connect(QApplication.quit)
         self.actionSelectAll.triggered.connect(self.onSelectAll)
         self.actionSelectNone.triggered.connect(self.onSelectNone)
         self.actionAbout.triggered.connect(self.onAbout)
-        self.actionAboutQt.triggered.connect(QT_QApplication.aboutQt)
+        self.actionAboutQt.triggered.connect(QApplication.aboutQt)
         self.deleteButton.clicked.connect(self.onBtnDelete)
         self.deleteButton.setEnabled(False)
         self.moveButton.clicked.connect(self.onBtnMove)
@@ -113,7 +113,7 @@ class MainWindow(QT_QMainWindow):
         self.actionAutoSelectOld.setEnabled(False)
         self.actionAutoSelectNew.setEnabled(False)
 
-        group = QT_QActionGroup(self)
+        group = QActionGroup(self)
         group.addAction(self.actionAutoSelectNone)
         group.addAction(self.actionAutoSelect)
         group.addAction(self.actionAutoSelectOld)
@@ -129,16 +129,16 @@ class MainWindow(QT_QMainWindow):
                 level += 1
 
         if level == 0 or level == 1:
-            menu = QT_QMenu()
-            menu.addAction(QT_QAction("Open File", self,
+            menu = QMenu()
+            menu.addAction(QAction("Open File", self,
                                       triggered=self.onOpenFile))
             menu.exec_(self.tree.viewport().mapToGlobal(position))
 
     def eventFilter(self, widget, event):
-        if event.type() == QtCore.QEvent.Resize and widget is self.imageLabel:
+        if event.type() == QEvent.Resize and widget is self.imageLabel:
             self.onItemSelected()
             return True
-        return QT_QMainWindow.eventFilter(self, widget, event)
+        return QMainWindow.eventFilter(self, widget, event)
 
     def hunt(self):
         self.imageLabel.clear()
@@ -146,8 +146,8 @@ class MainWindow(QT_QMainWindow):
         self.tree.clear()
         self.statusBar().showMessage("")
 
-        self.progress_dialog = QT_QProgressDialog(self)
-        self.progress_dialog.setWindowModality(QtCore.Qt.WindowModal)
+        self.progress_dialog = QProgressDialog(self)
+        self.progress_dialog.setWindowModality(Qt.WindowModal)
         self.progress_dialog.setWindowTitle("Working")
         self.progress_dialog.setLabelText("Finding duplicate files...")
         self.progress_dialog.setMinimum(0)
@@ -161,31 +161,31 @@ class MainWindow(QT_QMainWindow):
         self.thread.start()
 
     def onOpen(self):
-        dialog = QT_QFileDialog(self)
+        dialog = QFileDialog(self)
         dialog.setWindowTitle("Open Directory")
-        dialog.setFileMode(QT_QFileDialog.Directory)
-        if dialog.exec_() == QT_QDialog.Accepted:
+        dialog.setFileMode(QFileDialog.Directory)
+        if dialog.exec_() == QDialog.Accepted:
             self.path = dialog.selectedFiles()[0]
             self.hunt()
 
     def onSelectAll(self):
-        iterator = QT_QTreeWidgetItemIterator(self.tree)
+        iterator = QTreeWidgetItemIterator(self.tree)
         while iterator.value():
             item = iterator.value()
-            item.setCheckState(1, QtCore.Qt.Checked)
+            item.setCheckState(1, Qt.Checked)
             iterator += 1
 
     def onSelectNone(self):
-        iterator = QT_QTreeWidgetItemIterator(self.tree)
+        iterator = QTreeWidgetItemIterator(self.tree)
         while iterator.value():
             item = iterator.value()
-            item.setCheckState(1, QtCore.Qt.Unchecked)
+            item.setCheckState(1, Qt.Unchecked)
             iterator += 1
 
     def done(self, dups, errorstr):
         if errorstr:
             msg = "An unhandled exception occurred trying to search files."
-            errorbox = QT_QMessageBox(self)
+            errorbox = QMessageBox(self)
             errorbox.setText(msg + "\n\n" + errorstr)
             errorbox.setWindowTitle("Error")
             errorbox.exec_()
@@ -202,19 +202,19 @@ class MainWindow(QT_QMainWindow):
 
     def onBtnDelete(self):
         notice = "Are you sure you want to permanently delete all selected files?"
-        reply = QT_QMessageBox.question(self, 'Delete Files',
-                                        notice,
-                                        QT_QMessageBox.Yes,
-                                        QT_QMessageBox.No)
-        if reply == QT_QMessageBox.Yes:
+        reply = QMessageBox.question(self, 'Delete Files',
+                                     notice,
+                                     QMessageBox.Yes,
+                                     QMessageBox.No)
+        if reply == QMessageBox.Yes:
             delete_move_file(checked_files(self.tree))
             self.hunt()
 
     def onBtnMove(self):
-        dialog = QT_QFileDialog(self)
+        dialog = QFileDialog(self)
         dialog.setWindowTitle("Target Directory")
-        dialog.setFileMode(QT_QFileDialog.Directory)
-        if dialog.exec_() == QT_QDialog.Accepted:
+        dialog.setFileMode(QFileDialog.Directory)
+        if dialog.exec_() == QDialog.Accepted:
             path = dialog.selectedFiles()[0]
             delete_move_file(checked_files(self.tree), path)
             self.hunt()
@@ -233,23 +233,23 @@ class MainWindow(QT_QMainWindow):
     def onItemSelected(self):
         selected = self.tree.selectedItems()
         if selected:
-            image = QtGui.QImage(selected[0].text(0))
+            image = QImage(selected[0].text(0))
             if image.isNull():
                 self.imageLabel.clear()
                 self.imageLabel.setText("PREVIEW")
                 return
-            pixmap = QtGui.QPixmap.fromImage(image)
+            pixmap = QPixmap.fromImage(image)
             width = min(pixmap.width(), self.imageLabel.width())
             height = min(pixmap.height(), self.imageLabel.height())
             self.imageLabel.setPixmap(pixmap.scaled(width, height,
-                                                    QtCore.Qt.KeepAspectRatio))
+                                                    Qt.KeepAspectRatio))
 
     def onAbout(self):
         """About menu clicked."""
-        msg = QT_QMessageBox(self)
-        image = QtGui.QImage(":/icons/32x32/dittohunt.png")
-        pixmap = QtGui.QPixmap(image).scaledToHeight(32,
-                                                     QtCore.Qt.SmoothTransformation)
+        msg = QMessageBox(self)
+        image = QImage(":/icons/32x32/dittohunt.png")
+        pixmap = QPixmap(image).scaledToHeight(32,
+                                               Qt.SmoothTransformation)
         msg.setIconPixmap(pixmap)
         msg.setInformativeText("Copyright (c) 2017 Joshua Henderson")
         msg.setWindowTitle("Ditto Hunt " + __version__)
@@ -265,7 +265,7 @@ class MainWindow(QT_QMainWindow):
             "<p>This utility is handy, for example, if you have a bunch of"
             " images and want to find and get rid of duplicate images.</p>")
 
-        msg.setStandardButtons(QT_QMessageBox.Ok)
+        msg.setStandardButtons(QMessageBox.Ok)
         msg.exec_()
 
     def addDuplicates(self, duplist):
@@ -275,23 +275,23 @@ class MainWindow(QT_QMainWindow):
                          reverse=self.actionSortDupsReverse.isChecked())
 
         # pick the first one to be the parent
-        parent = QT_QTreeWidgetItem(self.tree)
+        parent = QTreeWidgetItem(self.tree)
         parent.setText(0, duplist[0])
-        parent.setCheckState(1, QtCore.Qt.Unchecked)
+        parent.setCheckState(1, Qt.Unchecked)
         parent.setExpanded(True)
 
         # all the rest are children
         for dup in duplist[1:]:
-            child = QT_QTreeWidgetItem(parent)
+            child = QTreeWidgetItem(parent)
             child.setText(0, dup)
             if self.actionAutoSelect.isChecked():
-                child.setCheckState(1, QtCore.Qt.Checked)
+                child.setCheckState(1, Qt.Checked)
             else:
-                child.setCheckState(1, QtCore.Qt.Unchecked)
+                child.setCheckState(1, Qt.Unchecked)
 
 def main():
     """Create main app and window."""
-    app = QT_QApplication(sys.argv)
+    app = QApplication(sys.argv)
     app.setApplicationName("Ditto Hunt")
     win = MainWindow(None)
     win.setWindowTitle("Ditto Hunt " + __version__)
