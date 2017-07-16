@@ -166,7 +166,7 @@ class MainWindow(QT_QMainWindow):
 
     def onOpen(self):
         dialog = QT_QFileDialog(self)
-        dialog.setWindowTitle('Open Directory')
+        dialog.setWindowTitle("Open Directory")
         dialog.setFileMode(QT_QFileDialog.Directory)
         if dialog.exec_() == QT_QDialog.Accepted:
             self.path = dialog.selectedFiles()[0]
@@ -202,12 +202,11 @@ class MainWindow(QT_QMainWindow):
         self.progress_dialog.hide()
 
     def onBtnDelete(self):
-        msg = "Are you sure you want to permanently delete all selected files?"
+        notice = "Are you sure you want to permanently delete all selected files?"
         reply = QT_QMessageBox.question(self, 'Delete Files',
-                                        msg,
+                                        notice,
                                         QT_QMessageBox.Yes,
                                         QT_QMessageBox.No)
-
         if reply == QT_QMessageBox.Yes:
             delete_move_file(checked_files(self.tree))
             self.hunt()
@@ -246,7 +245,8 @@ class MainWindow(QT_QMainWindow):
         msg.setIconPixmap(pixmap)
         msg.setInformativeText("Copyright (c) 2017 Joshua Henderson")
         msg.setWindowTitle("Ditto Hunt " + __version__)
-        with codecs.open(os.path.join(os.path.dirname(__file__),'LICENSE.txt'), encoding='utf-8') as f:
+        with codecs.open(os.path.join(os.path.dirname(__file__),'LICENSE.txt'),
+                         encoding='utf-8') as f:
             msg.setDetailedText(f.read())
         msg.setText(
             "<p><b>Ditto Hunt</b> is a duplicate file finder that quickly finds"
