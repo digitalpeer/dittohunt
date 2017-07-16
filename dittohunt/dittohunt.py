@@ -132,7 +132,7 @@ class MainWindow(QT_QMainWindow):
                 index = index.parent()
                 level += 1
 
-        if level == 0:
+        if level == 0 or level == 1:
             menu = QT_QMenu()
             menu.addAction(QT_QAction("Open File", self,
                                       triggered=self.onOpenFile))
