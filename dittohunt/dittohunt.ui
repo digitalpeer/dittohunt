@@ -201,12 +201,11 @@
     <property name="title">
      <string>Op&amp;tions</string>
     </property>
-    <addaction name="actionAutoSelectNone"/>
     <addaction name="actionAutoSelect"/>
-    <addaction name="actionAutoSelectOld"/>
-    <addaction name="actionAutoSelectNew"/>
+    <addaction name="actionSortDescending"/>
     <addaction name="separator"/>
-    <addaction name="actionSortDupsReverse"/>
+    <addaction name="actionSortByName"/>
+    <addaction name="actionSortByTime"/>
    </widget>
    <widget class="QMenu" name="menuActions">
     <property name="title">
@@ -282,7 +281,7 @@
     <string>Ctrl+N</string>
    </property>
   </action>
-  <action name="actionSortDupsReverse">
+  <action name="actionSortDescending">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -290,7 +289,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Sort Dups in Reverse</string>
+    <string>Sort Descending</string>
    </property>
   </action>
   <action name="actionAutoSelectOld">
@@ -322,6 +321,25 @@
   <action name="actionExpandAll">
    <property name="text">
     <string>Expand All</string>
+   </property>
+  </action>
+  <action name="actionSortByTime">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sort by File Modified Time</string>
+   </property>
+  </action>
+  <action name="actionSortByName">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sort by File Name</string>
    </property>
   </action>
  </widget>

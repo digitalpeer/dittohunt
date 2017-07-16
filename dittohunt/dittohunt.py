@@ -114,14 +114,9 @@ class MainWindow(QMainWindow):
         self.refreshButton.clicked.connect(self.onBtnRefresh)
         self.refreshButton.setEnabled(False)
 
-        self.actionAutoSelectOld.setEnabled(False)
-        self.actionAutoSelectNew.setEnabled(False)
-
-        group = QActionGroup(self)
-        group.addAction(self.actionAutoSelectNone)
-        group.addAction(self.actionAutoSelect)
-        group.addAction(self.actionAutoSelectOld)
-        group.addAction(self.actionAutoSelectNew)
+        group_sort = QActionGroup(self)
+        group_sort.addAction(self.actionSortByName)
+        group_sort.addAction(self.actionSortByTime)
 
     def onOpenMenu(self, position):
         indexes = self.tree.selectedIndexes()
@@ -307,8 +302,13 @@ class MainWindow(QMainWindow):
     def addDuplicates(self, duplist):
         """ Add the list of duplicate files to the tree. """
 
-        duplist = sorted(duplist,
-                         reverse=self.actionSortDupsReverse.isChecked())
+        if self.actionSortByTime.isChecked():
+            duplist = sorted(duplist,
+                             key=lambda name: os.path.getmtime(name),
+                             reverse=self.actionSortDescending.isChecked())
+        else:
+            duplist = sorted(duplist,
+                             reverse=self.actionSortDescending.isChecked())
 
         # pick the first one to be the parent
         parent = QTreeWidgetItem(self.tree)
