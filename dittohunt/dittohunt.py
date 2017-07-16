@@ -211,8 +211,9 @@ class MainWindow(QMainWindow):
         else:
             for dup in dups:
                 self.addDuplicates(dup)
-                self.statusBar().showMessage("Found {} files with at least one"
-                                             " duplicate.".format(len(dups)))
+
+            self.statusBar().showMessage("Found {} files with at least one"
+                                         " duplicate.".format(len(dups)))
             self.deleteButton.setEnabled(True)
             self.moveButton.setEnabled(True)
 
