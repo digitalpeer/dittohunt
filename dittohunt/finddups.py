@@ -7,6 +7,7 @@
 # SPDX-License-Identifier: GPL-3.0
 import os
 import sys
+import errno
 from hashlib import md5
 from pprint import pprint
 from collections import defaultdict
@@ -35,8 +36,11 @@ def find_duplicates(path, status_callback=None):
                 # This can result in FileNotFoundError, for example, when there
                 # is a bad symlink.  Just ignore this specific error.
                 sizes[os.path.getsize(path)].append(path)
-            except FileNotFoundError as e:
-                pass
+            except OSError as e:
+                if e.errno == errno.ENOENT:
+                    pass
+                else:
+                    raise
     sizes = [x for x in sizes.values() if len(x) > 1]
 
     # now compare hashes of equal size files

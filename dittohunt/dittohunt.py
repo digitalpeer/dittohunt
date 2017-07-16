@@ -71,13 +71,13 @@ class FindThread(QtCore.QThread):
         self.path = path
 
     def run(self):
-        error = None
+        errorstr = None
         dups = []
         try:
             dups = find_duplicates(self.path)
         except Exception as e:
-            error = str(e)
-        self.done.emit(dups, error)
+            errorstr = str(e)
+        self.done.emit(dups, errorstr)
 
     def __del__(self):
         self.wait()
@@ -186,12 +186,14 @@ class MainWindow(QT_QMainWindow):
             item.setCheckState(1, QtCore.Qt.Unchecked)
             iterator += 1
 
-    def done(self, dups, error):
-        if error is not None:
+    def done(self, dups, errorstr):
+        if errorstr:
             msg = "An unhandled exception occurred trying to search files."
             errorbox = QT_QMessageBox(self)
-            errorbox.setText(error)
+            errorbox.setText(msg + "\n\n" + errorstr)
+            errorbox.setWindowTitle("Error")
             errorbox.exec_()
+            self.path = None
         else:
             for dup in dups:
                 add_duplicates(self.tree, dup, self.actionAutoSelect.isChecked())
