@@ -11,6 +11,8 @@ import sys
 import os
 import subprocess
 import codecs
+from collections import defaultdict
+import shutil
 from .qt import *
 from .version import __version__
 from .finddups import find_duplicates
@@ -36,30 +38,13 @@ def delete_move_file(files, movedir=None):
         if movedir is None:
             os.remove(f)
         else:
-            target = os.path.join(movedir, f)
+            # special handling of drive, and also the fact that os.path.join
+            # won't join an absolute path
+            drive, path = os.path.splitdrive(os.path.abspath(f))
+            target = os.path.join(movedir, path.lstrip(os.sep))
             if not os.path.exists(os.path.dirname(target)):
                 os.makedirs(os.path.dirname(target))
-            os.rename(f, target)
-
-def add_duplicates(tree, duplist, check_children=False):
-    """ Add the list of duplicate files to the tree. """
-
-    dup = sorted(duplist, reverse=True)
-
-    # pick the first one to be the parent
-    parent = QT_QTreeWidgetItem(tree)
-    parent.setText(0, duplist[0])
-    parent.setCheckState(1, QtCore.Qt.Unchecked)
-    parent.setExpanded(True)
-
-    # all the rest are children
-    for dup in duplist[1:]:
-        child = QT_QTreeWidgetItem(parent)
-        child.setText(0, dup)
-        if check_children:
-            child.setCheckState(1, QtCore.Qt.Checked)
-        else:
-            child.setCheckState(1, QtCore.Qt.Unchecked)
+            shutil.move(f, target)
 
 class FindThread(QtCore.QThread):
     """ Thread to handle file searching so we don't block the main thread. """
@@ -122,6 +107,17 @@ class MainWindow(QT_QMainWindow):
         self.actionAboutQt.triggered.connect(QT_QApplication.aboutQt)
         self.deleteButton.clicked.connect(self.onBtnDelete)
         self.deleteButton.setEnabled(False)
+        self.moveButton.clicked.connect(self.onBtnMove)
+        self.moveButton.setEnabled(False)
+
+        self.actionAutoSelectOld.setEnabled(False)
+        self.actionAutoSelectNew.setEnabled(False)
+
+        group = QT_QActionGroup(self)
+        group.addAction(self.actionAutoSelectNone)
+        group.addAction(self.actionAutoSelect)
+        group.addAction(self.actionAutoSelectOld)
+        group.addAction(self.actionAutoSelectNew)
 
     def onOpenMenu(self, position):
         indexes = self.tree.selectedIndexes()
@@ -196,10 +192,11 @@ class MainWindow(QT_QMainWindow):
             self.path = None
         else:
             for dup in dups:
-                add_duplicates(self.tree, dup, self.actionAutoSelect.isChecked())
+                self.addDuplicates(dup)
                 self.statusBar().showMessage("Found {} files with at least one"
                                              " duplicate.".format(len(dups)))
             self.deleteButton.setEnabled(True)
+            self.moveButton.setEnabled(True)
 
         self.progress_dialog.hide()
 
@@ -211,6 +208,15 @@ class MainWindow(QT_QMainWindow):
                                         QT_QMessageBox.No)
         if reply == QT_QMessageBox.Yes:
             delete_move_file(checked_files(self.tree))
+            self.hunt()
+
+    def onBtnMove(self):
+        dialog = QT_QFileDialog(self)
+        dialog.setWindowTitle("Target Directory")
+        dialog.setFileMode(QT_QFileDialog.Directory)
+        if dialog.exec_() == QT_QDialog.Accepted:
+            path = dialog.selectedFiles()[0]
+            delete_move_file(checked_files(self.tree), path)
             self.hunt()
 
     def onOpenFile(self):
@@ -261,6 +267,27 @@ class MainWindow(QT_QMainWindow):
 
         msg.setStandardButtons(QT_QMessageBox.Ok)
         msg.exec_()
+
+    def addDuplicates(self, duplist):
+        """ Add the list of duplicate files to the tree. """
+
+        duplist = sorted(duplist,
+                         reverse=self.actionSortDupsReverse.isChecked())
+
+        # pick the first one to be the parent
+        parent = QT_QTreeWidgetItem(self.tree)
+        parent.setText(0, duplist[0])
+        parent.setCheckState(1, QtCore.Qt.Unchecked)
+        parent.setExpanded(True)
+
+        # all the rest are children
+        for dup in duplist[1:]:
+            child = QT_QTreeWidgetItem(parent)
+            child.setText(0, dup)
+            if self.actionAutoSelect.isChecked():
+                child.setCheckState(1, QtCore.Qt.Checked)
+            else:
+                child.setCheckState(1, QtCore.Qt.Unchecked)
 
 def main():
     """Create main app and window."""

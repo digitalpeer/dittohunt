@@ -92,6 +92,7 @@ if USE_QT_PY == PYQT5:
     QT_QHeaderView=QtWidgets.QHeaderView
     QT_QProgressDialog=QtWidgets.QProgressDialog
     QT_QAction=QtWidgets.QAction
+    QT_QActionGroup=QtWidgets.QActionGroup
     QT_QTreeWidgetItemIterator=QtWidgets.QTreeWidgetItemIterator
     QT_QMessageBox=QtWidgets.QMessageBox
 
@@ -117,6 +118,7 @@ elif USE_QT_PY == PYSIDE:
     QT_QHeaderView=QtGui.QHeaderView
     QT_QProgressDialog=QtGui.QProgressDialog
     QT_QAction=QtGui.QAction
+    QT_QActionGroup=QtGui.QActionGroup
     QT_QTreeWidgetItemIterator=QtGui.QTreeWidgetItemIterator
     QT_QMessageBox=QtGui.QMessageBox
     from .pyside_dynamic import *
@@ -145,6 +147,7 @@ elif USE_QT_PY == PYQT4:
     QT_QHeaderView=QtGui.QHeaderView
     QT_QProgressDialog=QtGui.QProgressDialog
     QT_QAction=QtGui.QAction
+    QT_QActionGroup=QtGui.QActionGroup
     QT_QTreeWidgetItemIterator=QtGui.QTreeWidgetItemIterator
     QT_QMessageBox=QtGui.QMessageBox
 
