@@ -19,7 +19,7 @@ pylint3:
 
 clean:
 	rm -f *.pyc dittohunt/*.pyc *.pyo dittohunt/*.pyo $(generated)
-	rm -rf dist build dittohunt.egg-info
+	rm -rf dist build dittohunt.egg-info dittohunt/__pycache__
 
 package: $(generated)
 	python setup.py sdist
