@@ -207,6 +207,8 @@
     </property>
     <addaction name="actionSelectAll"/>
     <addaction name="actionSelectNone"/>
+    <addaction name="actionCollapseAll"/>
+    <addaction name="actionExpandAll"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuOptions"/>
@@ -303,6 +305,16 @@
   <action name="actionAutoSelectNone">
    <property name="text">
     <string>Auto Select None</string>
+   </property>
+  </action>
+  <action name="actionCollapseAll">
+   <property name="text">
+    <string>Collapse All</string>
+   </property>
+  </action>
+  <action name="actionExpandAll">
+   <property name="text">
+    <string>Expand All</string>
    </property>
   </action>
  </widget>

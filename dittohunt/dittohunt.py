@@ -103,6 +103,8 @@ class MainWindow(QMainWindow):
         self.actionQuit.triggered.connect(QApplication.quit)
         self.actionSelectAll.triggered.connect(self.onSelectAll)
         self.actionSelectNone.triggered.connect(self.onSelectNone)
+        self.actionExpandAll.triggered.connect(self.onExpandAll)
+        self.actionCollapseAll.triggered.connect(self.onCollapseAll)
         self.actionAbout.triggered.connect(self.onAbout)
         self.actionAboutQt.triggered.connect(QApplication.aboutQt)
         self.deleteButton.clicked.connect(self.onBtnDelete)
@@ -180,6 +182,22 @@ class MainWindow(QMainWindow):
         while iterator.value():
             item = iterator.value()
             item.setCheckState(1, Qt.Unchecked)
+            iterator += 1
+
+    def onExpandAll(self):
+        iterator = QTreeWidgetItemIterator(self.tree,
+                                           QTreeWidgetItemIterator.HasChildren)
+        while iterator.value():
+            item = iterator.value()
+            item.setExpanded(True)
+            iterator += 1
+
+    def onCollapseAll(self):
+        iterator = QTreeWidgetItemIterator(self.tree,
+                                           QTreeWidgetItemIterator.HasChildren)
+        while iterator.value():
+            item = iterator.value()
+            item.setExpanded(False)
             iterator += 1
 
     def onDone(self, dups, errorstr):
