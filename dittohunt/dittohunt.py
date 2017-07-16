@@ -156,6 +156,7 @@ class MainWindow(QMainWindow):
         self.progress_dialog.setMaximum(0)
         self.progress_dialog.setValue(-1)
         self.progress_dialog.setCancelButton(None)
+        self.progress_dialog.setAttribute(Qt.WA_DeleteOnClose)
         self.progress_dialog.show()
 
         self.thread = FindThread(self, self.path)
@@ -217,7 +218,7 @@ class MainWindow(QMainWindow):
             self.deleteButton.setEnabled(True)
             self.moveButton.setEnabled(True)
 
-        self.progress_dialog.hide()
+        self.progress_dialog.close()
 
     def onBtnDelete(self):
         notice = "Are you sure you want to permanently delete all selected files?"
