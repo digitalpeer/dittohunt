@@ -51,8 +51,8 @@ class FindThread(QThread):
 
     done = QtCore.pyqtSignal(list, str, name='done')
 
-    def __init__(self, path):
-        super(FindThread, self).__init__()
+    def __init__(self, parent, path):
+        super(FindThread, self).__init__(parent)
         self.path = path
 
     def run(self):
@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
         self.progress_dialog.setCancelButton(None)
         self.progress_dialog.show()
 
-        self.thread = FindThread(self.path)
+        self.thread = FindThread(self, self.path)
         self.thread.done.connect(self.done)
         self.thread.start()
 
