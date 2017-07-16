@@ -18,7 +18,7 @@ pylint3:
 	pylint3 --reports=n $(LINT_FILES)
 
 clean:
-	rm -f *.pyc dittohunt/*.pyc $(generated)
+	rm -f *.pyc dittohunt/*.pyc *.pyo dittohunt/*.pyo $(generated)
 	rm -rf dist build dittohunt.egg-info
 
 package: $(generated)
