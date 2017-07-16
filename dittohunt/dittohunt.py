@@ -156,7 +156,7 @@ class MainWindow(QMainWindow):
 
         self.progress_dialog = QProgressDialog(self)
         self.progress_dialog.setWindowModality(Qt.WindowModal)
-        self.progress_dialog.setWindowTitle("Working")
+        self.progress_dialog.setWindowTitle("Searching")
         self.progress_dialog.setLabelText("Finding duplicate files...")
         self.progress_dialog.setMinimum(0)
         self.progress_dialog.setMaximum(0)
@@ -228,23 +228,34 @@ class MainWindow(QMainWindow):
         self.progress_dialog.close()
 
     def onBtnDelete(self):
-        notice = "Are you sure you want to permanently delete all selected files?"
+        checked = checked_files(self.tree)
+        notice = ("Are you sure you want to permanently delete {} selected"
+                  " files?").format(len(checked))
         reply = QMessageBox.question(self, 'Delete Files',
                                      notice,
                                      QMessageBox.Yes,
                                      QMessageBox.No)
         if reply == QMessageBox.Yes:
-            delete_move_file(checked_files(self.tree))
+            delete_move_file(checked)
             self.hunt()
 
     def onBtnMove(self):
         dialog = QFileDialog(self)
-        dialog.setWindowTitle("Target Directory")
+        dialog.setWindowTitle("Destination Directory")
         dialog.setFileMode(QFileDialog.Directory)
         if dialog.exec_() == QDialog.Accepted:
             path = dialog.selectedFiles()[0]
-            delete_move_file(checked_files(self.tree), path)
-            self.hunt()
+
+            checked = checked_files(self.tree)
+            notice = ("Are you sure you want to move {} selected files?"
+                      " Existing files will be overwritten.").format(len(checked))
+            reply = QMessageBox.question(self, 'Move Files',
+                                     notice,
+                                     QMessageBox.Yes,
+                                     QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                delete_move_file(checked, path)
+                self.hunt()
 
     def onBtnRefresh(self):
         if self.path:
