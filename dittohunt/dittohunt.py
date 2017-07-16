@@ -118,6 +118,9 @@ class MainWindow(QMainWindow):
         group_sort.addAction(self.actionSortByName)
         group_sort.addAction(self.actionSortByTime)
 
+        self.status = QLabel()
+        self.statusBar().addPermanentWidget(self.status)
+
     def onOpenMenu(self, position):
         indexes = self.tree.selectedIndexes()
         if len(indexes) > 0:
@@ -152,7 +155,7 @@ class MainWindow(QMainWindow):
         self.imageLabel.clear()
         self.imageLabel.setText("PREVIEW")
         self.tree.clear()
-        self.statusBar().showMessage("")
+        self.status.setText("")
 
         self.progress_dialog = QProgressDialog(self)
         self.progress_dialog.setWindowModality(Qt.WindowModal)
@@ -219,8 +222,8 @@ class MainWindow(QMainWindow):
             for dup in dups:
                 self.addDuplicates(dup)
 
-            self.statusBar().showMessage("Found {} files with at least one"
-                                         " duplicate.".format(len(dups)))
+            self.status.setText("Found {} files with at least one"
+                                " duplicate.".format(len(dups)))
             self.refreshButton.setEnabled(True)
             self.deleteButton.setEnabled(True)
             self.moveButton.setEnabled(True)
