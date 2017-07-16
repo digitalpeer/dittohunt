@@ -122,6 +122,13 @@
          <number>9</number>
         </property>
         <item>
+         <widget class="QPushButton" name="refreshButton">
+          <property name="text">
+           <string>Refresh</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="deleteButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

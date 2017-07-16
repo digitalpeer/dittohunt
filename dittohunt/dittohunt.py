@@ -111,6 +111,8 @@ class MainWindow(QMainWindow):
         self.deleteButton.setEnabled(False)
         self.moveButton.clicked.connect(self.onBtnMove)
         self.moveButton.setEnabled(False)
+        self.refreshButton.clicked.connect(self.onBtnRefresh)
+        self.refreshButton.setEnabled(False)
 
         self.actionAutoSelectOld.setEnabled(False)
         self.actionAutoSelectNew.setEnabled(False)
@@ -224,6 +226,7 @@ class MainWindow(QMainWindow):
 
             self.statusBar().showMessage("Found {} files with at least one"
                                          " duplicate.".format(len(dups)))
+            self.refreshButton.setEnabled(True)
             self.deleteButton.setEnabled(True)
             self.moveButton.setEnabled(True)
 
@@ -246,6 +249,10 @@ class MainWindow(QMainWindow):
         if dialog.exec_() == QDialog.Accepted:
             path = dialog.selectedFiles()[0]
             delete_move_file(checked_files(self.tree), path)
+            self.hunt()
+
+    def onBtnRefresh(self):
+        if self.path:
             self.hunt()
 
     def onOpenFile(self):
