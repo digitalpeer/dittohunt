@@ -157,7 +157,7 @@ class MainWindow(QMainWindow):
         self.progress_dialog.show()
 
         self.thread = FindThread(self, self.path)
-        self.thread.done.connect(self.done)
+        self.thread.done.connect(self.onDone)
         self.thread.start()
 
     def onOpen(self):
@@ -182,7 +182,7 @@ class MainWindow(QMainWindow):
             item.setCheckState(1, Qt.Unchecked)
             iterator += 1
 
-    def done(self, dups, errorstr):
+    def onDone(self, dups, errorstr):
         if errorstr:
             msg = "An unhandled exception occurred trying to search files."
             errorbox = QMessageBox(self)
