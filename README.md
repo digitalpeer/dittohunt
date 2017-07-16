@@ -34,11 +34,12 @@ Installation
 ------------
 For simplicity, instructions for only PyQt4 and Python2 are listed here.
 However, you can adjust to use any combination of Python2/Python3 and
-PyQt4/PyQt5/Pyside if you prefer when it comes to runtime dependencies.
+PyQt4/PyQt5/PySide if you prefer when it comes to runtime dependencies.
 
-On Ubuntu, first install dependencies using the system package manager.
+On Ubuntu or Debian, first install dependencies using the system package
+manager.
 
-    sudo apt-get install python python-qt4 python-serial python-pip
+    sudo apt-get install python python-qt4 python-pip
 
 Then, use pip to install dittohunt.
 
@@ -49,7 +50,7 @@ Or, if you're installing from source:
     pip install [--user] dittohunt-<version>.tar.bz2
 
 The --user option causes dittohunt to be installed in your home directory under
-~/.local.
+~/.local. You may have to add this to your path in some environments.
 
 Then, if you somehow get fed up with Ditto Hunt's awesomeness, uninstall it.
 

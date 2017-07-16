@@ -47,9 +47,7 @@ setup(
             'dittohunt = dittohunt.dittohunt:main',
         ]
     },
-    install_requires=[
-        'shutil>=2.3'
-    ],
+    install_requires=[],
     keywords='file find duplicate',
     classifiers=['Development Status :: 3 - Alpha',
                  'Environment :: X11 Applications :: Qt',
