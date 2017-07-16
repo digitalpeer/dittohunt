@@ -133,7 +133,9 @@ class MainWindow(QMainWindow):
         if level == 0 or level == 1:
             menu = QMenu()
             menu.addAction(QAction("Open File", self,
-                                      triggered=self.onOpenFile))
+                                   triggered=self.onOpenFile))
+            menu.addAction(QAction("Copy Path To Clipboard", self,
+                                   triggered=self.onCopyToClipboard))
             menu.exec_(self.tree.viewport().mapToGlobal(position))
 
     def eventFilter(self, widget, event):
@@ -141,6 +143,13 @@ class MainWindow(QMainWindow):
             self.onItemSelected()
             return True
         return QMainWindow.eventFilter(self, widget, event)
+
+    def onCopyToClipboard(self):
+        selected = self.tree.selectedItems()
+        if selected:
+            path = selected[0].text(0)
+            clipboard = QApplication.clipboard()
+            clipboard.setText(os.path.abspath(path))
 
     def hunt(self):
         self.imageLabel.clear()
