@@ -111,6 +111,8 @@ class MainWindow(QT_QMainWindow):
         self.imageLabel.setSizePolicy(QT_QSizePolicy.Ignored,
                                       QT_QSizePolicy.Ignored)
         self.imageLabel.installEventFilter(self)
+        self.imageLabel.setText("PREVIEW")
+        self.imageLabel.setStyleSheet('color: lightgrey')
 
         self.actionOpen.triggered.connect(self.onOpen)
         self.actionQuit.triggered.connect(QT_QApplication.quit)
@@ -144,6 +146,7 @@ class MainWindow(QT_QMainWindow):
 
     def hunt(self):
         self.imageLabel.clear()
+        self.imageLabel.setText("PREVIEW")
         self.tree.clear()
         self.statusBar().showMessage("")
 
@@ -226,6 +229,7 @@ class MainWindow(QT_QMainWindow):
             image = QtGui.QImage(selected[0].text(0))
             if image.isNull():
                 self.imageLabel.clear()
+                self.imageLabel.setText("PREVIEW")
                 return
             pixmap = QtGui.QPixmap.fromImage(image)
             width = min(pixmap.width(), self.imageLabel.width())
